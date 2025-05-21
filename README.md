@@ -30,14 +30,14 @@ This project demonstrates secure user login by:
 
 ### Example Data:
 
-| Username                | Titkos  |
-|-------------------------|---------|
-| katika@gmail.com        | piros   |
-| arpi40@freemail.hu      | zold    |
-| zsanettka@hotmail.com   | sarga   |
-| hatizsak@protonmail.com | kek     |
-| terpeszterez@citromail.hu | fekete |
-| nagysanyi@gmail.hu      | feher   |
+| Username                | Password  | Secret  |
+|-------------------------|---------|---------|
+| katika@gmail.com        | katica85   | piros   |
+| arpi40@freemail.hu      | polip    | zold   |
+| zsanettka@hotmail.com   | csillag12   | sarga   |
+| hatizsak@protonmail.com | tracking     | kek   |
+| terpeszterez@citromail.hu | cukorka | fekete   |
+| nagysanyi@gmail.hu      | julcsika   | feher   |
 
 ## 🔐 Password File (`password.txt`)
 
