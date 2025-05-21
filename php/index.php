@@ -46,10 +46,6 @@
     $pass = $_POST['password'] ?? '';
     $passwords = decodePasswordTXT("password.txt");
 
-    foreach ($passwords as $password) {
-      echo "$password";
-    }
-
     if (!array_key_exists($user, $passwords)) {
       $errorMessage = "❌ Nincs ilyen felhasználó.";
     } elseif ($passwords[$user] !== $pass) {
