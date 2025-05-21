@@ -1,0 +1,68 @@
+name: CI on main branch push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Detect and Build Docker Image(s)
+        run: |
+          IMAGE_ARCHIVE="${{ github.event.repository.name }}_docker_image.tar.gz"
+
+          if [ -f "docker-compose.yml" ]; then
+            echo "➡ Detected docker-compose.yml. Building with Docker Compose..."
+
+            docker compose build
+
+            echo "➡ Extracting image names from docker-compose.yml..."
+            docker compose config | grep 'image:' | awk '{print $2}' > image_list.txt
+
+            echo "➡ Saving all images into one tar archive..."
+            docker save $(cat image_list.txt) | gzip > $IMAGE_ARCHIVE
+          else
+            echo "➡ No docker-compose.yml found. Using default Dockerfile build..."
+
+            IMAGE_NAME="${{ github.event.repository.name }}_docker_image"
+            docker build -t $IMAGE_NAME .
+            docker save $IMAGE_NAME | gzip > $IMAGE_ARCHIVE
+          fi
+
+      - name: Set up SSH Key and Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{secrets.SSH_PORT}} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Test SSH Connection
+        run: |
+          ssh -p ${{secrets.SSH_PORT}} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo ✅ SSH Connection Successful"
+
+      - name: Transfer Docker Image Archive
+        run: |
+          rsync -avz -e "ssh -p ${{secrets.SSH_PORT}} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+          ./${{ github.event.repository.name }}_docker_image.tar.gz \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/
+
+      - name: Load Docker Image Archive on Server
+        run: |
+          ssh -p ${{secrets.SSH_PORT}} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+          "gunzip -c /home/${{ secrets.SSH_USER }}/${{ github.event.repository.name }}_docker_image.tar.gz | docker load"
+
+      - name: Run Docker Container on Server
+        run: |
+          ssh -p ${{secrets.SSH_PORT}} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+          ./reload_web_container.sh ${{ github.event.repository.name }} ${{vars.EPORTS}}:${{vars.IPORTS}}
