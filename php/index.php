@@ -71,8 +71,8 @@
     if (!array_key_exists($user, $jelszavak)) {
       echo "<p class='text-red-500 text-lg fade-in mb-4'>❌ Nincs ilyen felhasználó.</p>";
     } elseif ($jelszavak[$user] !== $pass) {
-      echo "<p class='text-red-500 text-lg fade-in mb-4'>❌ Hibás jelszó. Átirányítás 3 másodperc múlva...</p>";
       header("refresh:3;url=https://www.police.hu");
+      echo "<p class='text-red-500 text-lg fade-in mb-4'>❌ Hibás jelszó. Átirányítás 3 másodperc múlva...</p>";
     } else {
       // Sikeres login
       $mysqli = new mysqli("db", "user", "userpass", "adatok");
