@@ -16,7 +16,7 @@ This project demonstrates secure user login by:
 ## 👨‍💻 Project Requirements
 
 - PHP 7.4+ with CLI and web server interface
-- MySQL/MariaDB
+- MySQL 5.7
 - phpMyAdmin (for manual DB setup)
 - Docker (for containerized deployment)
 
