@@ -60,14 +60,14 @@
         $stmt = $mysqli->prepare("SELECT Titkos FROM tabla WHERE Username = ?");
         $stmt->bind_param("s", $user);
         $stmt->execute();
-        $stmt->bind_result($szin);
+        $stmt->bind_result($colorHungarian);
 
         $loggedIn = true;
 
         if ($stmt->fetch()) {
-          $angolSzin = $szinek[strtolower($szin)] ?? 'gray';
-          $userColor = "<div class='p-6 rounded-lg fade-in mt-4' style='background-color: $angolSzin; color: white;'>
-            Üdv <strong>$user</strong>! A kedvenc színed: <strong>$szin</strong>
+          $colorEnglish = $colors[strtolower($colorHungarian)] ?? 'gray';
+          $userColor = "<div class='p-6 rounded-lg fade-in mt-4' style='background-color: $colorEnglish; color: white;'>
+            Üdv <strong>$user</strong>! A kedvenc színed: <strong>$colorHungarian</strong>
           </div>";
         } else {
           $userColor = "<p class='text-gray-300'>Hiba: nem található kedvenc szín.</p>";
