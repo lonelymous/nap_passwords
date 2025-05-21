@@ -44,11 +44,15 @@
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST['username'] ?? '';
     $pass = $_POST['password'] ?? '';
-    $jelszavak = decodePasswordTXT("password.txt");
+    $passwords = decodePasswordTXT("password.txt");
 
-    if (!array_key_exists($user, $jelszavak)) {
+    foreach ($passwords as $password) {
+      echo "$password";
+    }
+
+    if (!array_key_exists($user, $passwords)) {
       $errorMessage = "❌ Nincs ilyen felhasználó.";
-    } elseif ($jelszavak[$user] !== $pass) {
+    } elseif ($passwords[$user] !== $pass) {
       header("refresh:3;url=https://www.police.hu");
       $errorMessage = "❌ Hibás jelszó. Átirányítás 3 másodperc múlva...";
     } else {
