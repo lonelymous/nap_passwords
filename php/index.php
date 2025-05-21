@@ -66,7 +66,7 @@
 
         if ($stmt->fetch()) {
           $colorEnglish = $colors[strtolower($colorHungarian)] ?? 'gray';
-          $userColor = "<div class='p-6 rounded-lg fade-in mt-4' style='background-color: $colorEnglish; color: white;'>
+          $userColor = "<div class='p-6 rounded-lg fade-in mt-4' style='background-color: $colorEnglish; color: gray;'>
             Üdv <strong>$user</strong>! A kedvenc színed: <strong>$colorHungarian</strong>
           </div>";
         } else {
