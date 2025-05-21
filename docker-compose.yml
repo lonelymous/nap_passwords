@@ -21,7 +21,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: userpass
     ports:
-      - "33060:3306"
+      - "7260:3306"
     networks:
       - appnet
     volumes:
@@ -32,7 +32,7 @@ services:
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
-      - "18081:80"
+      - "7281:80"
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: rootpass
@@ -42,7 +42,7 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "18080:80"
+      - "7280:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./php:/var/www/html
